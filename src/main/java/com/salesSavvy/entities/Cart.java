@@ -23,19 +23,13 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    @OneToOne
+    @JoinColumn(name = "user_id")
     @JsonBackReference(value = "user-cart")
     private Users user;
 
-    
-    @OneToMany(
-            mappedBy = "cart",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    @JsonManagedReference(value = "cart-cartItems")
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "cart-items")
     private List<CartItem> cartItems = new ArrayList<>();
 
 	public Cart() {
@@ -76,7 +70,7 @@ public class Cart {
 
 	@Override
 	public String toString() {
-		return "Cart [id=" + id + ", user=" + user + ", cartItems=" + cartItems + "]";
+		return "Cart [id=" + id + ", cartItems=" + cartItems + "]";
 	}
     
     

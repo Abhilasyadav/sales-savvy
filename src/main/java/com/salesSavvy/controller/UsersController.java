@@ -8,13 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.salesSavvy.entities.Product;
+import com.salesSavvy.DTO.CartDTO;
+import com.salesSavvy.entities.Cart;
 import com.salesSavvy.entities.UserLoginData;
 import com.salesSavvy.entities.Users;
+import com.salesSavvy.servies.CartService;
 import com.salesSavvy.servies.UsersService;
 
 @CrossOrigin("*")
@@ -22,6 +25,9 @@ import com.salesSavvy.servies.UsersService;
 public class UsersController {
 	@Autowired
 	UsersService service;
+	
+	@Autowired
+	CartService cartService;
 	
 	@PostMapping("/signup")
 	public String signUp(@RequestBody Users user) {
@@ -62,24 +68,23 @@ public class UsersController {
             return new ResponseEntity<>("An unexpected error occurred during login.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-//	
-	
-//	@PostMapping("/signin")
-//	public String signIn(@RequestBody UserLoginData user) {
-//		return service.verify(user);
-//	}
-//	
-	
-	@GetMapping("/getProfile")
-	public Users getProfile() {
-		return service.getUser("Rajat");
-	}
-	
+
 	
 	@PostMapping("/updateUsers")
 	public Users updateUsers() {
 		return service.getUser("Rohit");
 		}
+	
+	@GetMapping("/{username}")
+	public CartDTO getCart(@PathVariable String username) {
+	    Cart cart = cartService.getCart(username);
+	    return cartService.convertToDTO(cart);
+	}
+	
+	@GetMapping("/admin/getUsers")
+	public List<Users> getCustomers() {
+		return service.getAllUser();
+	}
 	
 	
 	

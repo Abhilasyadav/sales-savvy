@@ -14,6 +14,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -22,6 +24,8 @@ public class Product {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+	
+	private long userId;
 
     private String name;
     private String description;
@@ -31,15 +35,14 @@ public class Product {
 
     @ElementCollection
     @CollectionTable(
-        name = "product_reviews"
-//        joinColumns = @JoinColumn(name = "product_id")
-    )
+        name = "product_reviews")
     @Column(name = "review")
     private List<String> reviews = new ArrayList<>();
     
     
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference(value = "product-cartItems")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonBackReference(value = "product-cartitem")
+    @JsonIgnore
     private List<CartItem> cartItems = new ArrayList<>();
 
 
@@ -47,20 +50,20 @@ public class Product {
         super();
     }
 
-    
 
-    public Product(long id, String name, String description, double price, String photo, String category,
-		List<String> reviews) {
-	super();
-	this.id = id;
-	this.name = name;
-	this.description = description;
-	this.price = price;
-	this.photo = photo;
-	this.category = category;
-	this.reviews = reviews;
-}
-    
+	public Product(long id, long userId, String name, String description, double price, String photo, String category,
+			List<String> reviews, List<CartItem> cartItems) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.name = name;
+		this.description = description;
+		this.price = price;
+		this.photo = photo;
+		this.category = category;
+		this.reviews = reviews;
+		this.cartItems = cartItems;
+	}
 
 
 	public long getId() {
@@ -68,11 +71,19 @@ public class Product {
 	}
 
 
-
 	public void setId(long id) {
 		this.id = id;
 	}
 
+
+	public long getUserId() {
+		return userId;
+	}
+
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
 
 
 	public String getName() {
@@ -80,11 +91,9 @@ public class Product {
 	}
 
 
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 
 
 	public String getDescription() {
@@ -92,11 +101,9 @@ public class Product {
 	}
 
 
-
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
 
 
 	public double getPrice() {
@@ -104,11 +111,9 @@ public class Product {
 	}
 
 
-
 	public void setPrice(double price) {
 		this.price = price;
 	}
-
 
 
 	public String getPhoto() {
@@ -116,11 +121,9 @@ public class Product {
 	}
 
 
-
 	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
-
 
 
 	public String getCategory() {
@@ -128,11 +131,9 @@ public class Product {
 	}
 
 
-
 	public void setCategory(String category) {
 		this.category = category;
 	}
-
 
 
 	public List<String> getReviews() {
@@ -140,22 +141,28 @@ public class Product {
 	}
 
 
-
 	public void setReviews(List<String> reviews) {
 		this.reviews = reviews;
 	}
 
 
+	public List<CartItem> getCartItems() {
+		return cartItems;
+	}
+
+
+	public void setCartItems(List<CartItem> cartItems) {
+		this.cartItems = cartItems;
+	}
+
 
 	@Override
-    public String toString() {
-        return "Product{" +
-               "name='" + name + '\'' +
-               ", description='" + description + '\'' +
-               ", price=" + price +
-               ", photo='" + photo + '\'' +
-               ", category='" + category + '\'' +
-               ", reviews=" + reviews +
-               '}';
-    }
+	public String toString() {
+		return "Product [id=" + id + ", userId=" + userId + ", name=" + name + ", description=" + description
+				+ ", price=" + price + ", photo=" + photo + ", category=" + category + ", reviews=" + reviews
+				+ ", cartItems=" + cartItems + "]";
+	}
+    
+    
+    
 }

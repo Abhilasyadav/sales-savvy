@@ -34,7 +34,6 @@ public class Users {
     @Column(name = "last_name")
     private String lastName;
 	
-//	@JsonIgnore // Never serialize password
     @Column(nullable = false)
 	String password;
 	
@@ -50,9 +49,8 @@ public class Users {
     private String phoneNumber;
 	
 	
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference(value = "user-cart")
-	Cart cart;
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Cart cart;
 	
 	// Enums
     public enum Gender {
@@ -176,7 +174,7 @@ public class Users {
 	public String toString() {
 		return "Users [id=" + id + ", username=" + username + ", email=" + email + ", firstName=" + firstName
 				+ ", lastName=" + lastName + ", password=" + password + ", gender=" + gender + ", dateOfBirth="
-				+ dateOfBirth + ", role=" + role + ", phoneNumber=" + phoneNumber + ", cart=" + cart + "]";
+				+ dateOfBirth + ", role=" + role + ", phoneNumber=" + phoneNumber +"]";
 	}
 	
     
