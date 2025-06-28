@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.salesSavvy.DTO.OrderDTO;
 import com.salesSavvy.entities.Orders;
 import com.salesSavvy.entities.Users;
 import com.salesSavvy.repositories.OrderRepository;
@@ -60,29 +59,18 @@ public class OrderController {
     }
 
 
-    @GetMapping("/admin/all")
-    public ResponseEntity<List<OrderDTO>> getAllOrdersForAdmin() {
-        List<Orders> orders = orderRepo.findAll().stream()
+    
+    @GetMapping("/admin/orders")
+    public List<Orders> getAllOrdersForAdmin() {
+        return orderRepo.findAll().stream()
                 .filter(order -> !"CREATED".equalsIgnoreCase(order.getStatus()))
                 .sorted((a, b) -> b.getOrderTime().compareTo(a.getOrderTime()))
-                .collect(Collectors.toList());
-
-        List<OrderDTO> dtos = orders.stream().map(order -> {
-            OrderDTO dto = new OrderDTO();
-            dto.setId(order.getId());
-            dto.setAmount(order.getAmount());
-            dto.setStatus(order.getStatus());
-            dto.setPaymentId(order.getPaymentId());
-            dto.setUsername(order.getUser().getUsername()); 
-            dto.setOrderTime(order.getOrderTime());
-            return dto;
-        }).collect(Collectors.toList());
-
-        return ResponseEntity.ok(dtos);
+                .toList();
     }
+    
 
 
-    @PutMapping("/admin/orders/{orderId}/status")
+    @PutMapping("/admin/{orderId}/status")
     public String updateOrderStatus(@PathVariable String orderId, @RequestBody String newStatus) {
         Orders order = orderRepo.findById(orderId).orElse(null);
         if (order == null) return "Order not found";

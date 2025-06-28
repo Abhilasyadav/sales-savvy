@@ -3,9 +3,7 @@ package com.salesSavvy.entities;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.salesSavvy.DTO.OrderDTO;
-import com.salesSavvy.DTO.ProductDTO;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
@@ -21,9 +19,9 @@ public class Orders {
     private String receipt;
     private String paymentId;
     
-//    private ProductDTO product;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Users user;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
